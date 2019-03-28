@@ -58,7 +58,6 @@ elif [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ "$TRAVIS_SECURE_ENV_VARS" == "tr
 
     prepareBuildVersion
     ./gradlew build check sonarqube artifactory \
-      -Dsonar.analysis.mode=issues \
       -Dsonar.github.pullRequest=$TRAVIS_PULL_REQUEST \
       -Dsonar.github.repository=$TRAVIS_REPO_SLUG \
       -Dsonar.github.oauth=$GITHUB_TOKEN \
