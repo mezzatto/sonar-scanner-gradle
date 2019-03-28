@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Rule;
@@ -56,9 +57,13 @@ public abstract class AbstractGradleIT {
     return runGradlewSonarQubeSimulationModeWithEnv(project, Collections.emptyMap());
   }
 
-  protected Properties runGradlewSonarQubeSimulationModeWithEnv(String project, Map<String, String> env) throws Exception {
+  protected Properties runGradlewSonarQubeSimulationModeWithEnv(String project, Map<String, String> env, String... args) throws Exception {
     File out = temp.newFile();
-    runGradlewSonarQubeWithEnv(project, env, "-Dsonar.scanner.dumpToFile=" + out.getAbsolutePath());
+    String[] newArgs = Stream.concat(
+      Stream.of("-Dsonar.scanner.dumpToFile=" + out.getAbsolutePath()),
+      Arrays.stream(args))
+      .toArray(String[]::new);
+    runGradlewSonarQubeWithEnv(project, env, newArgs);
 
     Properties props = new Properties();
     try (FileReader fr = new FileReader(out)) {
